@@ -1,48 +1,53 @@
 <?php
 
-$errors = [];
+function validateRegistrationForm($data)
+{
 
-    if(isset($_POST['name'])){
+    $errors = [];
+
+    if (isset($_POST['name'])) {
         $name = $_POST['name'];
 
-        if(strlen($name)< 2) {
+        if (strlen($name) < 2) {
             $errors['name'] = 'Слишком короткое имя';
         }
     } else {
         $errors['name'] = "Имя должно быть заполнено";
     }
 
-    if(isset($_POST['email'])){
+    if (isset($_POST['email'])) {
         $email = $_POST['email'];
 
-        if(strlen($email)<2) {
+        if (strlen($email) < 2) {
             $errors['email'] = 'email должен быть больше 2 символов';
-    } elseif (filter_var($email, FILTER_VALIDATE_EMAIL)===false) {
-        $errors['email'] = 'email некорректный';
-     }
-    }else {
+        } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            $errors['email'] = 'email некорректный';
+        }
+    } else {
         $errors['email'] = "email должен быть заполнен";
     }
 
-    if(isset($_POST['psw'])) {
+    if (isset($_POST['psw'])) {
         $password = $_POST['psw'];
 
         if (strlen($password) < 4) {
             $errors['psw'] = 'Пароль слишком короткий.Придумайте новый пароль';
         }
-    }else{
+    } else {
         $errors['psw'] = 'Пароль должен быть заполнен';
     }
 
-    if(isset($_POST['psw-repeat'])){
+    if (isset($_POST['psw-repeat'])) {
         $passwordRepeat = $_POST['psw-repeat'];
 
-        if($password != $passwordRepeat) {
+        if ($password != $passwordRepeat) {
             $errors['psw-repeat'] = 'Пароли не совпадают';
-    }
+        }
     } else {
         $errors['psw-repeat'] = 'Пароль должен быть заполнен';
     }
+    return $errors;
+}
 
     if(empty($errors)) {
 
