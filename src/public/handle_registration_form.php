@@ -1,12 +1,12 @@
 <?php
 
-function validateRegistrationForm($data)
+function registrationValidate($data)
 {
 
     $errors = [];
 
-    if (isset($_POST['name'])) {
-        $name = $_POST['name'];
+    if (isset($data['name'])) {
+        $name = $data['name'];
 
         if (strlen($name) < 2) {
             $errors['name'] = 'Слишком короткое имя';
@@ -15,8 +15,8 @@ function validateRegistrationForm($data)
         $errors['name'] = "Имя должно быть заполнено";
     }
 
-    if (isset($_POST['email'])) {
-        $email = $_POST['email'];
+    if (isset($data['email'])) {
+        $email = $data['email'];
 
         if (strlen($email) < 2) {
             $errors['email'] = 'email должен быть больше 2 символов';
@@ -27,8 +27,8 @@ function validateRegistrationForm($data)
         $errors['email'] = "email должен быть заполнен";
     }
 
-    if (isset($_POST['psw'])) {
-        $password = $_POST['psw'];
+    if (isset($data['psw'])) {
+        $password = $data['psw'];
 
         if (strlen($password) < 4) {
             $errors['psw'] = 'Пароль слишком короткий.Придумайте новый пароль';
@@ -37,8 +37,8 @@ function validateRegistrationForm($data)
         $errors['psw'] = 'Пароль должен быть заполнен';
     }
 
-    if (isset($_POST['psw-repeat'])) {
-        $passwordRepeat = $_POST['psw-repeat'];
+    if (isset($data['psw-repeat'])) {
+        $passwordRepeat = $data['psw-repeat'];
 
         if ($password != $passwordRepeat) {
             $errors['psw-repeat'] = 'Пароли не совпадают';
@@ -49,19 +49,22 @@ function validateRegistrationForm($data)
     return $errors;
 }
 
+    $data = $_POST;
+    $errors = registrationValidate($data);
+
     if(empty($errors)) {
 
         $pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
         $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-        $stmt->execute(['email'=>$email]);
+        $stmt->execute(['email'=>$data['email']]);
         if($stmt->rowCount() > 0){
             $errors['email'] = "Пользователь с таким email уже существует";
         } else {
 
-        $password = password_hash($password, PASSWORD_DEFAULT);
+        $password = password_hash($data['psw'], PASSWORD_DEFAULT);
 
         $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-        $stmt->execute(['name'=>$name, 'email'=>$email, 'password'=>$password]);
+        $stmt->execute(['name'=>$data['name'], 'email'=>$data['email'], 'password'=>$password]);
             echo "Регистрация прошла успешно";
         }
         $data = $stmt->fetch();
