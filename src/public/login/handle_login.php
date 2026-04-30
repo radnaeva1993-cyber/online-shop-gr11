@@ -4,12 +4,12 @@ function loginValidate($data)
 {
     $errors = [];
 
-    if (!isset($data['email'])) {
+    if (empty($data['email'])) {
 
         $errors['email'] = "email должен быть заполнен";
     }
 
-    if (!isset($data['password'])) {
+    if (empty($data['password'])) {
 
         $errors['password'] = 'Пароль должен быть заполнен';
     }
@@ -36,7 +36,7 @@ function loginValidate($data)
         if(password_verify($password, $passwordDb)) {
             session_start();
             $_SESSION['userId'] = $user['id'];
-            header('Location: catalog.php');
+            header('Location: catalog');
 
         } else {
             $errors['login'] = 'Пользователь или пароль неверный';
@@ -45,6 +45,6 @@ function loginValidate($data)
 
     }
 
-require_once __DIR__ . "/../login/login_form.php";
+    require_once './login/login_form.php';
 
 ?>

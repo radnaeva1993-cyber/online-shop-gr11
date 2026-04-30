@@ -1,125 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <style>
+            .edit-mode {
+                display: none;
+                margin-top: 5px;
+            }
 
-<div class="container">
-    <br>
-    <br>
-    <div class="row" id="main">
-        <!--         <div class="col-md-4 well" id="leftPanel">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div>
-                                <img src="http://lorempixel.com/200/200/abstract/1/" alt="Texto Alternativo" class="img-circle img-thumbnail">
-                                <h2>Gopinath Perumal</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua.</p>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-warning">
-                                        Social</button>
-                                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-                                        <span class="caret"></span><span class="sr-only">Social</span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Twitter</a></li>
-                                        <li><a href="https://plus.google.com/+Jquery2dotnet/posts">Google +</a></li>
-                                        <li><a href="https://www.facebook.com/jquery2dotnet">Facebook</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">Github</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-        <!--         <div class="col-md-8 well" id="rightPanel">
-                    <div class="row"> -->
-        <div class="col-md-12">
-            <form role="form">
-                <h2>Edit your profile.<small>It's always easy</small></h2>
-                <hr class="colorgraph">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-4 col-md-4">
-                        <div class="form-group">
-                            <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1">
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-8 col-md-4">
-                        <div class="form-group">
-                            <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <div class="form-group">
-                            <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <div class="form-group">
-                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
-                        </div>
-                    </div>
-                </div>
-                <hr class="colorgraph">
-                <div class="row">
-                    <div class="col-xs-12 col-md-6"></div>
-                    <div class="col-xs-12 col-md-6"><a href="#" class="btn btn-success btn-block btn-lg">Save</a></div>
-                </div>
-            </form>
-            <!-- 	</div>
-            </div> -->
-            <!-- Modal -->
-            <div class="modal fade" id="t_and_c_m" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title" id="myModalLabel">Terms & Conditions</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">I Agree</button>
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
+            .edit-input {
+                padding: 5px 10px;
+                border: 1px solid #007bff;
+                border-radius: 4px;
+                font-size: 16px;
+                width: 200px;
+            }
+
+            .global-edit-controls {
+                display: none;
+                margin-top: 20px;
+                text-align: center;
+            }
+
+            .save-all-btn, .cancel-all-btn {
+                padding: 10px 25px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: bold;
+                margin: 0 10px;
+                transition: all 0.3s;
+            }
+
+            .save-all-btn {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .save-all-btn:hover {
+                background-color: #218838;
+                transform: translateY(-2px);
+            }
+
+            .cancel-all-btn {
+                background-color: #dc3545;
+                color: white;
+            }
+
+            .cancel-all-btn:hover {
+                background-color: #c82333;
+                transform: translateY(-2px);
+            }
+
+            .edit-mode-btn {
+                position: absolute;
+                right: 14%;
+                background: none;
+                border: none;
+                color: #007bff;
+                cursor: pointer;
+                font-size: 16px;
+                padding: 5px 15px;
+                border-radius: 4px;
+                transition: all 0.3s;
+            }
+
+            .edit-mode-btn:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+        </style>
+</head>
+<body>
+
+<div class="navbar-top">
+    <div class="title">
+        <h1>Profile</h1>
+    </div>
+</div>
+
+<div class="sidenav">
+    <div class="profile">
+        <img src="https://imdezcode.files.wordpress.com/2020/02/imdezcode-logo.png" alt="" width="100" height="100">
+
+        <div class="name">
+            <?php echo $user['name']?>
+        </div>
+    </div>
+
+    <div class="sidenav-url">
+        <div class="url">
+            <a href="#profile" class="active">Profile</a>
+            <hr align="center">
         </div>
     </div>
 </div>
-</div>
 
+<div class="main">
+    <h2>IDENTITY</h2>
+    <div class="card">
+        <div class="card-body">
+            <?php if (!$isEditing): ?>
+                <a href="?edit=true" class="edit-mode-btn">
+                    <i class="fa fa-pen fa-xs"></i> Редактировать профиль
+                </a>
+            <?php endif; ?>
+            <?php if ($isEditing): ?>
+                <form method="POST">
+            <?php endif; ?>
+            <table>
+                <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>:</td>
+                    <td>
+                        <?php if ($isEditing): ?>
+                            <input type="text" name="name" class="edit-input" value="<?php echo $user['name'] ?>">
+                        <?php else: ?>
+                            <?php echo $user['name'] ?>
+                        <?php endif; ?>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>:</td>
+                    <td>
+                        <?php if ($isEditing): ?>
+                            <input type="email" name="email" class="edit-input" value="<?php echo $user['email'] ?>">
+                        <?php else: ?>
+                            <?php echo $user['email'] ?>
+                        <?php endif; ?>
+                </tr>
+                <tr>
+                    <td>password</td>
+                    <td>:</td>
+                    <td>
+                        <?php if ($isEditing): ?>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="password" name="password" class="edit-input"
+                                       placeholder="Новый пароль (не заполняйте, если не меняете)">
+                                <div style="font-size: 12px; color: #666;">
+                                    ⓘ Оставьте пустым, чтобы сохранить текущий пароль
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            ********
+                        <?php endif; ?>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <?php if ($isEditing): ?>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button type="submit" class="save-btn">Сохранить</button>
+                    <a href="?" class="cancel-btn">Отмена</a>
+                </div>
+                </form>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+</body>
+</html>
 
 <style>
-    #leftPanel{
-        background-color:#0079ac;
-        color:#fff;
-        /*     text-align: center; */
-    }
+/* Import Font Dancing Script */
+@import url(https://fonts.googleapis.com/css?family=Dancing+Script);
 
-    #rightPanel{
-        min-height:500px;
-        min_width:300px;
-    }
+* {
+margin: 0;
+}
 
-    /* Credit to bootsnipp.com for the css for the color graph */
-    .colorgraph {
-        height: 20px;
-        border-top: 0;
-        /*   background: #c4e17f; */
-        border-radius: 5px;
-        background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-        background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-        background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-        background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-    }
+body {
+background-color: #e8f5ff;
+font-family: Arial;
+overflow: hidden;
+}
+
+/* NavbarTop */
+.navbar-top {
+background-color: #fff;
+color: #333;
+box-shadow: 0px 4px 8px 0px grey;
+height: 70px;
+}
+
+.title {
+font-family: 'Dancing Script', cursive;
+padding-top: 15px;
+position: absolute;
+left: 45%;
+}
+
+.navbar-top ul {
+float: right;
+list-style-type: none;
+margin: 0;
+overflow: hidden;
+padding: 18px 50px 0 40px;
+}
+
+.navbar-top ul li {
+float: left;
+}
+
+.navbar-top ul li a {
+color: #333;
+padding: 14px 16px;
+text-align: center;
+text-decoration: none;
+}
+
+.icon-count {
+background-color: #ff0000;
+color: #fff;
+float: right;
+font-size: 11px;
+left: -25px;
+padding: 2px;
+position: relative;
+}
+
+/* End */
+
+/* Sidenav */
+.sidenav {
+background-color: #fff;
+color: #333;
+border-bottom-right-radius: 25px;
+height: 86%;
+left: 0;
+overflow-x: hidden;
+padding-top: 20px;
+position: absolute;
+top: 70px;
+width: 250px;
+}
+
+.profile {
+margin-bottom: 20px;
+margin-top: -12px;
+text-align: center;
+}
+
+.profile img {
+border-radius: 50%;
+box-shadow: 0px 0px 5px 1px grey;
+}
+
+.name {
+font-size: 20px;
+font-weight: bold;
+padding-top: 20px;
+}
+
+.url, hr {
+text-align: center;
+}
+
+.url hr {
+margin-left: 20%;
+width: 60%;
+}
+
+.url a {
+color: #818181;
+display: block;
+font-size: 20px;
+margin: 10px 0;
+padding: 6px 8px;
+text-decoration: none;
+}
+
+.url a:hover, .url .active {
+background-color: #e8f5ff;
+border-radius: 28px;
+color: #000;
+margin-left: 14%;
+width: 65%;
+}
+
+/* End */
+
+/* Main */
+.main {
+margin-top: 2%;
+margin-left: 29%;
+font-size: 28px;
+padding: 0 10px;
+width: 58%;
+}
+
+.main h2 {
+color: #333;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+font-size: 24px;
+margin-bottom: 10px;
+}
+
+.main .card {
+background-color: #fff;
+border-radius: 18px;
+box-shadow: 1px 1px 8px 0 grey;
+height: auto;
+margin-bottom: 20px;
+padding: 20px 0 20px 50px;
+}
+
+.main .card table {
+border: none;
+font-size: 16px;
+height: 270px;
+width: 80%;
+}
+
+.edit {
+position: absolute;
+color: #e7e7e8;
+right: 14%;
+}
+
 </style>
+
+
+
