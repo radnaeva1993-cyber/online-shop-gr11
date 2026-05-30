@@ -1,68 +1,76 @@
 <?php
 
+
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 //регистрация
 if ($requestUri === '/registration') {
+
+    require_once '../Controllers/UserController.php';
+    $user = new UserController();
+
     if ($requestMethod === 'GET') {
-        require_once './registration/registration_form.php';
+        $user->getRegistrate();
     } elseif ($requestMethod === 'POST') {
-        require_once './registration/handle_registration_form.php';
+        $user->registrate();
     } else {
         echo "HTTP метод $requestMethod не работает";
     }
 
     //логин
 } elseif ($requestUri === '/login') {
+    require_once '../Controllers/UserController.php';
+    $user = new UserController();
     if ($requestMethod === 'GET') {
-        require_once './login/login_form.php';
+        $user->getLogin();
     } elseif ($requestMethod === 'POST') {
-        require_once './login/handle_login.php';
+        $user->login();
     } else {
         echo "HTTP метод $requestMethod не работает";
     }
 
      //каталог
 } elseif ($requestUri === '/catalog') {
-    if ($requestMethod === 'POST') {
-        require_once './catalog/catalog_page.php';
-    } elseif ($requestMethod === 'GET') {
-        require_once './catalog/catalog.php';
+    require_once '../Controllers/ProductController.php';
+    $product = new ProductController();
+
+    if ($requestMethod === 'GET') {
+        $product->catalog();
+    }elseif ($requestMethod === 'POST') {
+        $product->addProduct();
+
     } else {
         echo "HTTP метод $requestMethod не работает";
     }
 
     // выдача профиля
 } elseif ($requestUri === '/profile') {
+    require_once '../Controllers/UserController.php';
+    $user = new UserController();
     if ($requestMethod === 'POST') {
-        require_once './profile/profile_page.php';
+        $user->getProfile();
     } elseif ($requestMethod === 'GET') {
-        require_once './profile/profile.php';
+        $user->profile();
     } else {
         echo "HTTP метод $requestMethod не работает";
     }
 
     // изменение профиля
 } elseif ($requestUri === '/edit-profile') {
+    require_once '../Controllers/UserController.php';
+    $user = new UserController();
     if ($requestMethod === 'GET') {
-        require_once './editProfile/edit_profile_form.php';
+        $user->getEditProfile();
     } elseif ($requestMethod === 'POST') {
-        require_once './editProfile/handle_edit_profile.php';
+        $user->editProfile();
     } else {
         echo "HTTP метод $requestMethod не работает";
     }
-} elseif ($requestUri === '/Add-product') {
-    if ($requestMethod === 'GET') {
-        require_once './addProduct/add_product_form.php';
-    } elseif ($requestMethod === 'POST') {
-        require_once './addProduct/handle_add_product.php';
-    } else {
-        echo "HTTP метод $requestMethod не работает";
-    }
+
 } elseif ($requestUri === '/cart') {
     if ($requestMethod === 'POST') {
-        require_once './cart/cart_page.php';
+        require_once '../cart/cart_page.php';
     } elseif ($requestMethod === 'GET') {
         require_once './cart/cart.php';
     } else {

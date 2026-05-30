@@ -11,10 +11,10 @@ services:
       - db
 
   php-fpm:
-    build: ./Docker
+    build: ./Docker/php
     volumes:
       - ./:/var/www/html
-    restart: always
+      - ./Docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-xdebug.ini
 
   db:
     ports:

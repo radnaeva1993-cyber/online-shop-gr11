@@ -18,9 +18,30 @@
                     </div>
                 </a>
             </div>
+
+            <form action="/catalog" method="POST">
+                <div class="container">
+
+                    <input type="hidden" placeholder="Enter product-id" name="product_id" value="<?php echo $product['id'];?>" id="product_id" required>
+
+                    <label for="amount"><b>Amount</b></label>
+                    <?php if(isset($errors['amount'])): ?>
+                        <label style="color: crimson"><?php echo $errors['amount']; ?></label>
+                    <?php endif; ?>
+                    <input type="text" placeholder="Enter amount" name="amount" id="amount" required>
+
+                    <button type="submit" class="registerbtn">Add product</button>
+                </div>
+
+                <div class="container signin">
+                    <p>Already have an account? <a href="#">Sign in</a>.</p>
+                </div>
+            </form>
         <?php endforeach; ?>
     </div>
 </div>
+
+
 
 <style>
     body {

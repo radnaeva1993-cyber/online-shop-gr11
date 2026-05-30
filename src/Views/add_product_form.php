@@ -1,4 +1,4 @@
-<form action="/add-product" method="POST">
+<form action="/Add-product" method="POST">
     <div class="container">
         <h1>Add product</h1>
         <p>Please fill in this form to create an account.</p>

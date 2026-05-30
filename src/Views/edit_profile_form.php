@@ -1,25 +1,3 @@
-<?php
-
-session_start();
-
-if (!isset($_SESSION['userId'])) {
-    header('Location: /login');
-    exit;
-}
-
-$pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
-
-$stmt = $pdo->prepare("SELECT name, email FROM users WHERE id = :id");
-$stmt->execute(['id' => $_SESSION['userId']]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($user === false) {
-    header('Location: /login');
-    exit;
-}
-
-?>
-
 !DOCTYPE html>
 <html lang="ru">
 <head>
