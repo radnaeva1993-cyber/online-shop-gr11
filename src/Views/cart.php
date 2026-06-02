@@ -1,3 +1,4 @@
+
 <div class="container">
     <a href="/profile">Мой профиль</a>
     <a href="/cart">Корзина</a>
@@ -16,6 +17,9 @@
                         <div class="card-footer">
                             <?php echo $product['price'];?>
                         </div>
+                    <div>
+                       Количество: <?php echo $product['amount'];?>
+                    </div>
                     </div>
                 </a>
             </div>

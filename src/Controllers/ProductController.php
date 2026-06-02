@@ -1,6 +1,19 @@
 <?php
+
+namespace Controllers;
+
+use Model\Product;
+use Model\UserProducts;
 class ProductController
 {
+    private Product $userModel;
+    private UserProducts $userProductModel;
+    public function __construct()
+    {
+        $this->userModel = new Product();
+        $this->userProductModel = new UserProducts();
+    }
+
     public function catalog()
     {
         session_start();
@@ -9,10 +22,7 @@ class ProductController
 //if (!isset($_COOKIE['user_id'])) {
 //    header("Location: /login_form.php");
 //}
-
-            require_once '../Model/Product.php';
-            $userModel = new Product();
-            $products = $userModel->getProducts();
+            $products = $this->userModel->getProducts();
 
             require_once '../Views/catalog.php';
         } else {
@@ -34,27 +44,28 @@ class ProductController
 
         $errors = $this->validate($_POST);
 
+        $products = $this->userModel->getProducts();
+
         if (empty($errors)) {
-            $pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
+//            $pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
             $userId = $_SESSION['userId'];
             $productId = $_POST['product_id'];
             $amount = $_POST['amount'];
 
-            require_once '../Model/Product.php';
-            $userModel = new Product();
-            $data = $userModel->getUserProductsByProductIdUserId($productId,$userId);
+            $data = $this->userProductModel->getUserProducts($productId, $userId);
 
             if ($data === false) {
 
-                $userModel->insertIntoUserProducts($userId, $productId, $amount);
+                $this->userProductModel->insertUserProducts($userId, $productId, $amount);
             } else {
                 $amount = $data['amount'] + $amount;
-                $userModel->getUserProductByAmount($productId, $userId, $amount);
+                $this->userProductModel->getUserProductByAmount($productId, $userId, $amount);
 
             }
             header("Location: /catalog");
             exit();
         }
+        require_once '../Views/catalog.php';
 
     }
 
@@ -66,11 +77,9 @@ class ProductController
 
             $productId = (int)$data['product_id'];
 
-            require_once '../Model/Product.php';
-            $userModel = new Product();
-            $result = $userModel->getByProductId($productId);
+            $product = $this->userModel->getByProductId($productId);
 
-            if ($data === false) {
+            if ($product === false) {
                 $errors['product_id'] = 'Продукт не найден';
             }
         } else {
@@ -85,5 +94,5 @@ class ProductController
         }
         return $errors;
     }
-
 }
+

@@ -1,8 +1,18 @@
 <?php
 
+namespace Controllers;
+
+use Model\User;
 
 class UserController
 {
+
+    private User $userModel;
+    public function __construct()
+    {
+        $this->userModel = new User();
+    }
+
     public function getRegistrate()
     {
 
@@ -18,10 +28,7 @@ class UserController
 
             $email = $data['email'];
 
-            $pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
-            require_once '../Model/User.php';
-            $userModel = new User();
-            $user = $userModel->getByEmail($email);
+            $user = $this->userModel->getByEmail($email);
             if ($user !== false) {
                 $errors['email'] = "Пользователь с таким email уже существует";
             } else {
@@ -29,7 +36,7 @@ class UserController
                 $password = password_hash($data['psw'], PASSWORD_DEFAULT);
                 $name = $data['name'];
 
-                $result = $userModel->insertIntoUser($name, $email, $password);
+                $result = $this->userModel->insertIntoUser($name, $email, $password);
                 echo "Регистрация прошла успешно";
             }
 
@@ -100,13 +107,12 @@ class UserController
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            require_once '../Model/User.php';
-            $userModel = new User();
-            $user = $userModel->getByEmail($email);
+
+            $user = $this->userModel->getByEmail($email);
 
 
             if ($user === false) {
-                $errors['login'] = 'Пользователь или пароль неверный';
+                $errors['email'] = 'Пользователь или пароль неверный';
             } else {
                 $passwordDb = $user['password'];
 
@@ -116,7 +122,7 @@ class UserController
                     header('Location: catalog');
 
                 } else {
-                    $errors['login'] = 'Пользователь или пароль неверный';
+                    $errors['password'] = 'Пользователь или пароль неверный';
                 }
             }
         }
@@ -150,11 +156,10 @@ class UserController
         session_start();
 
         if (isset($_SESSION['userId'])) {
-            require_once '../Model/User.php';
-            $userModel = new User();
+
             $userId = $_SESSION['userId'];
 
-            $user = $userModel->getById($userId);
+            $user = $this->userModel->getById($userId);
 
             require_once '../Views/profile.php';
 
@@ -171,11 +176,10 @@ class UserController
             header('Location: /login');
             exit;
         }
-        require_once '../Model/User.php';
-        $userModel = new User();
+
         $userId = $_SESSION['userId'];
 
-        $user = $userModel->getNameEmailById($userId);
+        $user = $this->userModel->getNameEmailById($userId);
 
         if ($user === false) {
             header('Location: /login');
@@ -202,17 +206,15 @@ class UserController
             exit;
         }
 
-        require_once '../Model/User.php';
-        $userModel = new User();
         $pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
 
         if ($newPassword !== '') {
             $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-           $userModel->updateNameEmailPasswordById($newName, $hashedPassword, $newEmail);
+            $this->userModel->updateNameEmailPasswordById($newName, $hashedPassword, $newEmail);
 
         } else {
-           $userModel->updateNameEmailById($newName, $newEmail);
+            $this->userModel->updateNameEmailById($newName, $newEmail);
         }
 
         header('Location: /profile');

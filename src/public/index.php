@@ -1,83 +1,53 @@
 <?php
 
-
-$requestUri = $_SERVER['REQUEST_URI'];
-$requestMethod = $_SERVER['REQUEST_METHOD'];
-
-//регистрация
-if ($requestUri === '/registration') {
-
-    require_once '../Controllers/UserController.php';
-    $user = new UserController();
-
-    if ($requestMethod === 'GET') {
-        $user->getRegistrate();
-    } elseif ($requestMethod === 'POST') {
-        $user->registrate();
-    } else {
-        echo "HTTP метод $requestMethod не работает";
+$autoloadCore = function(string $className)
+{
+    $path = "../Core/{$className}.php";
+    if (file_exists($path)) {
+        require_once $path;
+        return true;
     }
+        return false;
+};
 
-    //логин
-} elseif ($requestUri === '/login') {
-    require_once '../Controllers/UserController.php';
-    $user = new UserController();
-    if ($requestMethod === 'GET') {
-        $user->getLogin();
-    } elseif ($requestMethod === 'POST') {
-        $user->login();
-    } else {
-        echo "HTTP метод $requestMethod не работает";
+$autoloadController = function(string $className)
+{
+    $path = "../Controllers/{$className}.php";
+    if (file_exists($path)) {
+        require_once $path;
+        return true;
     }
+    return false;
+};
 
-     //каталог
-} elseif ($requestUri === '/catalog') {
-    require_once '../Controllers/ProductController.php';
-    $product = new ProductController();
-
-    if ($requestMethod === 'GET') {
-        $product->catalog();
-    }elseif ($requestMethod === 'POST') {
-        $product->addProduct();
-
-    } else {
-        echo "HTTP метод $requestMethod не работает";
+$autoloadModel = function(string $className)
+{
+    $path = "../Model/{$className}.php";
+    if (file_exists($path)) {
+        require_once $path;
+        return true;
     }
+    return false;
+};
 
-    // выдача профиля
-} elseif ($requestUri === '/profile') {
-    require_once '../Controllers/UserController.php';
-    $user = new UserController();
-    if ($requestMethod === 'POST') {
-        $user->getProfile();
-    } elseif ($requestMethod === 'GET') {
-        $user->profile();
-    } else {
-        echo "HTTP метод $requestMethod не работает";
+$autoload = function(string $className)
+{
+$path = str_replace("\\", "/", $className);
+$path = $path . ".php";
+$path = './../' . $path;
+
+    if (file_exists($path)) {
+        require_once $path;
+        return true;
     }
+    return false;
+};
 
-    // изменение профиля
-} elseif ($requestUri === '/edit-profile') {
-    require_once '../Controllers/UserController.php';
-    $user = new UserController();
-    if ($requestMethod === 'GET') {
-        $user->getEditProfile();
-    } elseif ($requestMethod === 'POST') {
-        $user->editProfile();
-    } else {
-        echo "HTTP метод $requestMethod не работает";
-    }
 
-} elseif ($requestUri === '/cart') {
-    if ($requestMethod === 'POST') {
-        require_once '../cart/cart_page.php';
-    } elseif ($requestMethod === 'GET') {
-        require_once './cart/cart.php';
-    } else {
-        echo "HTTP метод $requestMethod не работает";
-    }
 
-} else {
-    http_response_code(404);
-    require_once './404.php';
-}
+spl_autoload_register($autoload);
+spl_autoload_register($autoloadController);
+
+
+$app = new Core\App();
+$app->run();
