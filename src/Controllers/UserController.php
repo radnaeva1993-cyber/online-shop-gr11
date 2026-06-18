@@ -4,12 +4,14 @@ namespace Controllers;
 
 use Model\User;
 
-class UserController
+class UserController extends BaseController
 {
 
-    private User $userModel;
+    private $userModel;
+
     public function __construct()
     {
+        parent::__construct();
         $this->userModel = new User();
     }
 
@@ -29,14 +31,14 @@ class UserController
             $email = $data['email'];
 
             $user = $this->userModel->getByEmail($email);
-            if ($user !== false) {
+            if ($user !== null) {
                 $errors['email'] = "Пользователь с таким email уже существует";
             } else {
 
                 $password = password_hash($data['psw'], PASSWORD_DEFAULT);
                 $name = $data['name'];
 
-                $result = $this->userModel->insertIntoUser($name, $email, $password);
+                $this->userModel->insertIntoUser($name, $email, $password);
                 echo "Регистрация прошла успешно";
             }
 
@@ -104,29 +106,19 @@ class UserController
         $errors = $this->loginValidate($_POST);
 
         if (empty($errors)) {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
 
+            $result = $this->authService->auth($_POST["email"], $_POST["password"]);
 
-            $user = $this->userModel->getByEmail($email);
+            if ($result) {
+                header('Location: catalog');
+                exit;
 
-
-            if ($user === false) {
-                $errors['email'] = 'Пользователь или пароль неверный';
             } else {
-                $passwordDb = $user['password'];
+                $errors['email'] = 'Пользователь или пароль неверный';
 
-                if (password_verify($password, $passwordDb)) {
-                    session_start();
-                    $_SESSION['userId'] = $user['id'];
-                    header('Location: catalog');
-
-                } else {
-                    $errors['password'] = 'Пользователь или пароль неверный';
-                }
             }
+            require_once '../Views/login_form.php';
         }
-        require_once '../Views/login_form.php';
     }
 
     private function loginValidate($data)
@@ -153,13 +145,10 @@ class UserController
 
     public function profile()
     {
-        session_start();
 
-        if (isset($_SESSION['userId'])) {
+        if ($this->authService->checkSession()) {
 
-            $userId = $_SESSION['userId'];
-
-            $user = $this->userModel->getById($userId);
+            $user = $this->authService->getCurrentUser();
 
             require_once '../Views/profile.php';
 
@@ -168,20 +157,26 @@ class UserController
         }
     }
 
+
+    public function logout()
+    {
+        parent::logout();
+        header('Location: /login');
+        exit;
+    }
     public function getEditProfile()
     {
-        session_start();
 
-        if (!isset($_SESSION['userId'])) {
+        if ($this->authService->check()) {
             header('Location: /login');
             exit;
         }
 
-        $userId = $_SESSION['userId'];
+        $user = $this->authService->getCurrentUser();
 
-        $user = $this->userModel->getNameEmailById($userId);
+        $result = $this->userModel->getNameEmailById($user->getId());
 
-        if ($user === false) {
+        if ($result === null) {
             header('Location: /login');
             exit;
         }
@@ -190,9 +185,8 @@ class UserController
 
     public function editProfile()
     {
-        session_start();
 
-        if (!isset($_SESSION['userId'])) {
+        if ($this->authService->check()) {
             header('Location: /login');
             exit;
         }
@@ -206,12 +200,12 @@ class UserController
             exit;
         }
 
-        $pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
+//        $pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
 
         if ($newPassword !== '') {
             $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-            $this->userModel->updateNameEmailPasswordById($newName, $hashedPassword, $newEmail);
+            $this->userModel->updateNameEmailPasswordById($newName, $newEmail, $hashedPassword);
 
         } else {
             $this->userModel->updateNameEmailById($newName, $newEmail);

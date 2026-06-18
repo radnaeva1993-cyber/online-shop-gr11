@@ -4,19 +4,39 @@ namespace Model;
 class User extends Model
 {
 
-    public function getByEmail(string $email)
-    {
-        $stmt = $this->PDO->prepare("SELECT * FROM users WHERE email = :email");
-        $stmt->execute([':email' => $email]);
+    private int $id;
+    private string $name;
+    private string $email;
+    private string $password;
 
+    protected function getTableName(): string
+    {
+        return 'users';
+    }
+
+    public function getByEmail(string $email): self|null
+    {
+        $stmt = $this->PDO->prepare("SELECT * FROM {$this->getTableName()} WHERE email = :email");
+        $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
-        return $user;
+
+        if($user === false){
+            return null;
+        }
+
+       $obj = new self;
+        $obj->id = $user['id'];
+        $obj->name = $user['name'];
+        $obj->email = $user['email'];
+        $obj->password = $user['password'];
+
+        return $obj;
     }
 
     public function updateNameEmailPasswordById($newName, $newEmail, $hashedPassword)
     {
 
-        $stmt = $this->PDO->prepare("UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id");
+        $stmt = $this->PDO->prepare("UPDATE {$this->getTableName()} SET name = :name, email = :email, password = :password WHERE id = :id");
         $stmt->execute([
             'name' => $newName,
             'email' => $newEmail,
@@ -29,7 +49,7 @@ class User extends Model
     {
 
         $stmt = $this->PDO->prepare("
-        UPDATE users
+        UPDATE {$this->getTableName()}
         SET name = :name, email = :email
         WHERE id = :id
     ");
@@ -40,28 +60,70 @@ class User extends Model
         ]);
     }
 
-    public function getNameEmailById($userId)
+    public function getNameEmailById($userId): self|null
     {
-        $stmt = $this->PDO->prepare("SELECT name, email FROM users WHERE id = :id");
+        $stmt = $this->PDO->prepare("SELECT name, email FROM {$this->getTableName()} WHERE id = :id");
         $userId = $_SESSION['userId'];
         $stmt->execute(['id' => $userId]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $user;
+        $user = $stmt->fetch();
+
+
+        if($user === false){
+            return null;
+        }
+
+        $obj = new self;
+
+        $obj->name = $user['name'];
+        $obj->email = $user['email'];
+
+        return $obj;
     }
 
-    public function getById($userId)
+    public function getById($userId):self|null
     {
         $userId = $_SESSION['userId'];
-        $stmt = $this->PDO->query("SELECT * FROM users WHERE id = " . $userId);
+        $stmt = $this->PDO->query("SELECT * FROM {$this->getTableName()} WHERE id = " . $userId);
         $user = $stmt->fetch();
-        return $user;
+
+        if($user === false){
+            return null;
+        }
+
+        $obj = new self;
+        $obj->id = $user['id'];
+        $obj->name = $user['name'];
+        $obj->email = $user['email'];
+        $obj->password = $user['password'];
+        return $obj;
     }
 
-    public function insertIntoUser($name, $email, $password)
+    public function insertIntoUser(string $name, string $email, string $password): void
     {
-        $stmt = $this->PDO->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
+        $stmt = $this->PDO->prepare("INSERT INTO {$this->getTableName()} (name, email, password) VALUES (:name, :email, :password)");
         $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]);
-        $result = $stmt->fetch();
-        print_r($result);
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+
 }
+

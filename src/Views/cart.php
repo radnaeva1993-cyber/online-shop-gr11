@@ -1,48 +1,59 @@
-
 <div class="container">
     <a href="/profile">Мой профиль</a>
     <a href="/cart">Корзина</a>
-    <h3>Catalog</h3>
-    <div class="card-deck">
-        <?php foreach ($products as $product): ?>
-            <div class="card text-center">
-                <a href="#">
+    <h3>Корзина</h3>
+    <div class="container">
+        <div class="card-deck">
+            <?php foreach ($products as $product): ?>
+                <div class="card text-center" style="width: 18rem; margin: 10px;">
                     <div class="card-header">
-                        Hit!
+                        <!-- Название товара -->
+                        <h5 class="card-title"><?php echo $product->getName(); ?></h5>
                     </div>
-                    <img class="card-img-top" src="<?php echo $product['image_url']; ?>" alt="Card image">
+
+                    <!-- Картинка -->
+                    <img class="card-img-top" src="<?php echo $product->getImageUrl(); ?>" alt="Image" style="height: 200px; object-fit: cover;">
+
                     <div class="card-body">
-                        <p class="card-text text-muted"><?php echo $product['name'];?></p>
-                        <a href="#"><h5 class="card-title"><?php echo $product['description'];?></h5></a>
-                        <div class="card-footer">
-                            <?php echo $product['price'];?>
+                        <!-- Описание -->
+                        <p class="card-text text-muted"><?php echo $product->getDescription(); ?></p>
+
+                        <!-- Цена -->
+                        <p class="card-text"><strong>Цена:</strong> <?php echo $product->getPrice(); ?> ₽</p>
+
+                        <!-- Блок управления количеством -->
+                        <div class="controls-wrapper" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;">
+
+                            <!-- Кнопка минус -->
+                            <form action="/decreaseAmount" method="POST" style="display:inline;">
+                                <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
+                                <button type="submit" class="btn btn-danger btn-sm">-</button>
+                            </form>
+
+                            <!-- Цифра количества -->
+                            <span class="badge badge-info" style="font-size: 18px; padding: 5px 15px;">
+                            <?php echo $product->amount; ?>
+                        </span>
+
+                            <!-- Кнопка плюс -->
+                            <form action="/increaseAmount" method="POST" style="display:inline;">
+                                <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
+                                <button type="submit" class="btn btn-success btn-sm">+</button>
+                            </form>
+
                         </div>
-                    <div>
-                       Количество: <?php echo $product['amount'];?>
                     </div>
-                    </div>
-                </a>
-            </div>
-
-            <form action="/catalog" method="POST">
-                <div class="container">
-
-                    <input type="hidden" placeholder="Enter product-id" name="product_id" value="<?php echo $product['id'];?>" id="product_id" required>
-
-                    <label for="amount"><b>Amount</b></label>
-                    <?php if(isset($errors['amount'])): ?>
-                        <label style="color: crimson"><?php echo $errors['amount']; ?></label>
-                    <?php endif; ?>
-                    <input type="text" placeholder="Enter amount" name="amount" id="amount" required>
-
-                    <button type="submit" class="registerbtn">Add product</button>
                 </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 
-                <div class="container signin">
-                    <p>Already have an account? <a href="#">Sign in</a>.</p>
-                </div>
-            </form>
-        <?php endforeach; ?>
+    <button type="submit" class="registerbtn">Add product</button>
+    <div class="container signin">
+        <p>Already have an account? <a href="#">Sign in</a>.</p>
+</form>
+
+
     </div>
 </div>
 

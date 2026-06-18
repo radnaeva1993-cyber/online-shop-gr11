@@ -179,7 +179,7 @@
 <div class="sidenav">
     <div class="profile">
         <img src="https://imdezcode.files.wordpress.com/2020/02/imdezcode-logo.png" alt="avatar" width="100" height="100">
-        <div class="name"><?php echo htmlspecialchars($user['name']); ?></div>
+        <div class="name"><?php echo htmlspecialchars($user->getName()); ?></div>
     </div>
 
     <div class="sidenav-url">
@@ -205,7 +205,7 @@
                                     type="text"
                                     name="name"
                                     class="edit-input"
-                                    value="<?php echo htmlspecialchars($user['name']); ?>"
+                                    value="<?php echo htmlspecialchars($user->getName()); ?>"
                                     required
                             >
                         </td>
@@ -218,7 +218,7 @@
                                     type="email"
                                     name="email"
                                     class="edit-input"
-                                    value="<?php echo htmlspecialchars($user['email']); ?>"
+                                    value="<?php echo htmlspecialchars($user->getEmail()); ?>"
                                     required
                             >
                         </td>

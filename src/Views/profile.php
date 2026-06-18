@@ -90,7 +90,7 @@
         <img src="https://imdezcode.files.wordpress.com/2020/02/imdezcode-logo.png" alt="" width="100" height="100">
 
         <div class="name">
-            <?php echo $user['name']?>
+            <?php echo $user->getName()?>
         </div>
     </div>
 
@@ -121,7 +121,7 @@
 
 
 
-                                <?php echo $user['name'] ?>
+                                <?php echo $user->getName() ?>
 
                     </tr>
                     <tr>
@@ -131,7 +131,7 @@
 
 
 
-                                <?php echo $user['email'] ?>
+                                <?php echo $user->getEmail() ?>
 
                     </tr>
                     <tr>

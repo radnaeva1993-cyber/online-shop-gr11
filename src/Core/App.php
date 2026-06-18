@@ -2,74 +2,10 @@
 
 namespace Core;
 
-use Controllers\CartController;
-use Controllers\ProductController;
-use Controllers\UserController;
-
 class App
 {
 
-    private array $routes = [
-        '/registration' => [
-            'GET' => [
-                'class' => UserController::class,
-                'method' => 'getRegistrate',
-            ],
-            'POST' => [
-                'class' => UserController::class,
-                'method' => 'registrate',
-            ],
-        ],
-        '/login' => [
-            'GET' => [
-                'class' => UserController::class,
-                'method' => 'getLogin',
-            ],
-            'POST' => [
-                'class' => UserController::class,
-                'method' => 'login',
-            ],
-
-        ],
-        '/catalog' => [
-            'GET' => [
-                'class' => ProductController::class,
-                'method' => 'catalog',
-            ],
-            'POST' => [
-                'class' => ProductController::class,
-                'method' => 'addProduct',
-            ],
-        ],
-        '/profile' => [
-            'GET' => [
-                'class' => UserController::class,
-                'method' => 'profile',
-            ],
-            'POST' => [
-                'class' => UserController::class,
-                'method' => 'getProfile',
-            ],
-        ],
-        '/edit-profile' => [
-            'GET' => [
-                'class' => UserController::class,
-                'method' => 'getEditProfile',
-            ],
-            'POST' => [
-                'class' => UserController::class,
-                'method' => 'editProfile',
-            ],
-        ],
-        '/cart' => [
-            'GET' => [
-                'class' => CartController::class,
-                'method' => 'cart',
-            ],
-
-        ]
-    ];
-
+    private array $routes = [];
 
     public function run()
     {
@@ -96,6 +32,46 @@ class App
             require_once '../Views/404.php';
         }
     }
+
+//    public function addRoute(string $route, string $routeMethod, string $className, string $method)
+//    {
+//        $this->routes[$route][$routeMethod] = [
+//            'class' => $className,
+//            'method' => $method,
+//            ];
+//    }
+
+    public function get(string $route, string $className, string $method)
+    {
+        $this->routes[$route]['GET'] = [
+            'class' => $className,
+            'method' => $method,
+        ];
+    }
+    public function post(string $route, string $className, string $method)
+    {
+        $this->routes[$route]['POST'] = [
+            'class' => $className,
+            'method' => $method,
+        ];
+    }
+
+    public function put(string $route, string $className, string $method)
+    {
+        $this->routes[$route]['PUT'] = [
+            'class' => $className,
+            'method' => $method,
+        ];
+    }
+
+    public function delete(string $route, string $className, string $method)
+    {
+        $this->routes[$route]['DELETE'] = [
+            'class' => $className,
+            'method' => $method,
+        ];
+    }
+
 }
 
 
