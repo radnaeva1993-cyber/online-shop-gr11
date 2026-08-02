@@ -4,7 +4,7 @@ use Controllers\UserController;
 use Controllers\ProductController;
 use Controllers\OrderController;
 use Controllers\CartController;
-use Core\Autoloader;
+
 require_once './../Core/Autoloader.php';
 
 $path = dirname(__DIR__);
@@ -54,7 +54,8 @@ $app->get('/login',  UserController::class , 'getLogin');
 $app->post('/login', UserController::class , 'login');
 
 $app->get('/catalog', ProductController::class , 'catalog');
-$app->post('/catalog', ProductController::class,'addProduct');
+$app->post('/increase-amount', ProductController::class,'increaseAmount');
+$app->post('/decrease-amount', ProductController::class,'decreaseAmount');
 
 $app->get('/profile',  UserController::class , 'profile');
 $app->post('/profile', UserController::class , 'getProfile');
@@ -72,5 +73,9 @@ $app->get('/user-orders', OrderController::class , 'getAllOrders');
 
 $app->post('/increaseAmount', CartController::class, 'increaseAmount');
 $app->post('/decreaseAmount', CartController::class, 'decreaseAmount');
+
+$app->get('/reviews', ProductController::class , 'getReviews');
+$app->post('/reviews', ProductController::class , 'addReview');
+
 
 $app->run();

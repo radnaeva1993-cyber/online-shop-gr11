@@ -9,7 +9,7 @@ class App
 
     public function run()
     {
-        $requestUri = $_SERVER['REQUEST_URI'];
+        $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
         if (isset($this->routes[$requestUri])) {

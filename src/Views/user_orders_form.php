@@ -7,7 +7,7 @@
 
         <a href="/profile" class="nav-link">👤 Мой профиль</a>
 
-        <a href="/cart" class="nav-link">🛒 Добавить в корзину</a>
+        <a href="/catalog" class="nav-link">🛒 Каталог товаров</a>
 
     </div>
 

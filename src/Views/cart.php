@@ -1,6 +1,7 @@
 <div class="container">
     <a href="/profile">Мой профиль</a>
-    <a href="/cart">Корзина</a>
+    <a href="/catalog">Каталог</a>
+    <a href="/create-order">Оформить заказа</a>
     <h3>Корзина</h3>
     <div class="container">
         <div class="card-deck">
@@ -48,9 +49,7 @@
         </div>
     </div>
 
-    <button type="submit" class="registerbtn">Add product</button>
-    <div class="container signin">
-        <p>Already have an account? <a href="#">Sign in</a>.</p>
+
 </form>
 
 

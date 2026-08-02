@@ -3,94 +3,130 @@
 namespace Controllers;
 
 use Model\Product;
+use Model\Review;
 use Model\UserProducts;
+use Service\CartService;
 class ProductController extends BaseController
 {
     private Product $productModel;
     private UserProducts $userProductModel;
+
+    private CartService $cartService;
+
+    private Review $reviewModel;
     public function __construct()
     {
         parent::__construct();
         $this->productModel = new Product();
         $this->userProductModel = new UserProducts();
+        $this->reviewModel = new Review();
+        $this->cartService = new CartService();
     }
 
     public function catalog()
     {
-
-        if ($this->authService->checkSession()) {
-
-//if (!isset($_COOKIE['user_id'])) {
-//    header("Location: /login_form.php");
-//}
-            $products = $this->productModel->getProducts();
-
-            require_once '../Views/catalog.php';
-        } else {
+        if ($this->authService->check()) {
             header("Location: /login");
-            exit;
+            exit();
         }
+
+        $products = $this->productModel->getProducts();
+
+        $user = $this->authService->getCurrentUser();
+
+        $userProducts = $this->userProductModel->getAllProductsByUserId($user->getId());
+
+        $cartItems = [];
+        foreach ($userProducts as $userProduct) {
+
+            $cartItems[$userProduct->getProductId()] = $userProduct->getAmount();
+        }
+
+        require_once '../Views/catalog.php';
     }
 
-    public function addProduct()
+    public function increaseAmount()
+    {
+        if ($this->authService->check()) {
+            header("Location: /login");
+            exit();
+        }
+
+        $user = $this->authService->getCurrentUser();
+        $productId = (int)$_POST['product_id'];
+
+        $this->cartService->increaseAmount($productId, $user->getId());
+
+        header("Location: /catalog");
+        exit();
+    }
+
+    public function decreaseAmount()
+    {
+        if ($this->authService->check()) {
+            header("Location: /login");
+            exit();
+        }
+
+        $user = $this->authService->getCurrentUser();
+        $productId = (int)$_POST['product_id'];
+
+        $this->cartService->decreaseAmount($productId, $user->getId());
+        header("Location: /catalog");
+        exit();
+    }
+
+    public function getReviews(): void
     {
 
         if ($this->authService->check()) {
             header("Location: /login");
             exit();
         }
+        $productId = $_GET['product_id'];
 
-        $errors = $this->validate($_POST);
+        $product = $this->productModel->getOneById($productId);
 
-        $products = $this->productModel->getProducts();
-
-        if (empty($errors)) {
-//            $pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
+        if ($productId) {
             $user = $this->authService->getCurrentUser();
-            $productId = (int) $_POST['product_id'];
-            $amount = (int) $_POST['amount'];
+            $product = $this->productModel->getOneById($productId);
 
-            $data = $this->userProductModel->getUserProducts($productId, $user->getId());
-
-            if ($data === null) {
-
-                $this->userProductModel->insertUserProducts($user->getId(), $productId, $amount);
-            } else {
-                $amount = $data->getAmount() + $amount;
-                $this->userProductModel->updateUserProductAmount($productId, $user->getId(), $amount);
-
+            if ($product) {
+                $reviews = $this->reviewModel->getAllByProductId($productId);
             }
-            header("Location: /catalog");
+            require_once "../Views/reviews_form.php";
+        }
+    }
+
+    public function addReview(): void
+    {
+        if ($this->authService->check()) {
+            header("Location: /login");
             exit();
         }
-        require_once '../Views/catalog.php';
 
-    }
+        $productId = $_POST['product_id'];
+        $comment = $_POST['comment'];
+        $user = $this->authService->getCurrentUser();
 
-    private function validate($data)
-    {
-        $errors = [];
 
-        if (isset($data['product_id'])) {
+        $userId = $user->getId();
+        $result = $this->reviewModel->create($productId, $userId, $comment);
 
-            $productId = (int)$data['product_id'];
+        header("Location: /reviews?product_id=" . $productId );
+        exit();
 
-            $product = $this->productModel->getByProductId($productId);
-
-            if ($product === false) {
-                $errors['product_id'] = 'Продукт не найден';
-            }
-        } else {
-            $errors['product_id'] = 'id продукта должен быть указан';
-        }
-
-        if (isset($data['amount'])) {
-            $amount = (int)$data['amount'];
-            if ($amount < 0) {
-                $errors['amount'] = 'Количество не может быть меньше 0';
-            }
-        }
-        return $errors;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
