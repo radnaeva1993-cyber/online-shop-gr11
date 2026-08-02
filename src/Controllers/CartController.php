@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Model\Product;
 use Model\UserProducts;
+use Request\AddProductRequest;
 use Service\CartService;
 
 class CartController extends BaseController
@@ -47,7 +48,7 @@ class CartController extends BaseController
         require_once '../Views/cart.php';
     }
 
-    public function increaseAmount()
+    public function increaseAmount(AddProductRequest $request)
     {
         if ($this->authService->check()) {
             header("Location: /login");
@@ -55,7 +56,7 @@ class CartController extends BaseController
         }
 
         $user = $this->authService->getCurrentUser();
-        $productId = (int)$_POST['product_id'];
+        $productId =  $request->getProductId();
 
         $this->cartService->increaseAmount($productId, $user->getId());
 
@@ -63,7 +64,7 @@ class CartController extends BaseController
         exit();
     }
 
-    public function decreaseAmount()
+    public function decreaseAmount(AddProductRequest $request)
     {
         if ($this->authService->check()) {
             header("Location: /login");
@@ -71,13 +72,12 @@ class CartController extends BaseController
         }
 
         $user = $this->authService->getCurrentUser();
-        $productId = (int)$_POST['product_id'];
+        $productId = $request->getProductId();
 
         $this->cartService->decreaseAmount($productId, $user->getId());
         header("Location: /cart");
         exit();
     }
-
 
 }
 

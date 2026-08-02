@@ -2,29 +2,21 @@
 
 namespace Controllers;
 
-use Model\Order;
-use Model\OrderProduct;
-use Model\Product;
-use Model\UserProducts;
+use DTO\OrderCreateDTO;
+
 use Service\OrderService;
 
 class OrderController extends BaseController
 {
 
-    private Order $orderModel;
-    private UserProducts $userProductModel;
-    private OrderProduct $orderProductModel;
-    private Product $productModel;
     private OrderService $orderService;
 
     public function __construct()
     {
         parent::__construct();
-        $this->orderModel = new Order();
-        $this->userProductModel = new UserProducts();
-        $this->orderProductModel = new OrderProduct();
-        $this->productModel = new Product();
+
         $this->orderService = new OrderService();
+
 
     }
 
@@ -40,7 +32,7 @@ class OrderController extends BaseController
 
     }
 
-    public function handleCheckout()
+    public function handleCheckout(array $data)
     {
 
         if ($this->authService->check()) {
@@ -48,16 +40,17 @@ class OrderController extends BaseController
             exit;
         }
 
-        $errors = $this->validate($_POST);
+        $errors = $this->validate($data);
+        $user = $_SESSION['userId'];
 
         if (empty($errors)) {
-            $contactName = $_POST['contact_name'];
-            $contactPhone = $_POST['contact_phone'];
-            $comment = $_POST['comment'];
-            $userId = $_SESSION['userId'];
-            $address = $_POST['address'];
 
-            $this->orderService->createOrder($contactName, $contactPhone, $comment, $userId, $address);
+            $dto = new OrderCreateDTO($data['contact_name'],
+                $data['contact_phone'],
+                $data['comment'],  $user,
+                $data['address']);
+
+            $this->orderService->createOrder($dto);
 
             header('Location: catalog');
             exit;
