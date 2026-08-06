@@ -27,7 +27,7 @@ public function getPasswordRepeat(): string
     return $this->data['psw-repeat'];
 }
 
-    public function validate()
+    public function validate(): array
     {
 
         $errors = [];

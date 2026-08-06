@@ -2,6 +2,14 @@
 
 namespace Core;
 
+use Request\AddProductRequest;
+use Request\EditProfileRequest;
+use Request\LoginRequest;
+use Request\OrderRequest;
+use Request\RegistrateRequest;
+use Request\ReviewRequest;
+use Service\CartService;
+
 class App
 {
 
@@ -23,8 +31,15 @@ class App
 
                 $controller = new $class();
 
+                $requestClass = $handler['request'];
+                if( $requestClass !== null){
+                   $request =  new $requestClass($_POST);
+                   $controller->$method($request);
+                } else {
+                    $controller->$method();
+                }
 
-                $controller->$method($_POST);
+                $controller->$method();
 
             } else {
                 echo "$requestMethod не поддерживается для $requestUri";
@@ -43,18 +58,20 @@ class App
 //            ];
 //    }
 
-    public function get(string $route, string $className, string $method)
+    public function get(string $route, string $className, string $method, string $requestClass = null)
     {
         $this->routes[$route]['GET'] = [
             'class' => $className,
             'method' => $method,
+            'request' => $requestClass
         ];
     }
-    public function post(string $route, string $className, string $method)
+    public function post(string $route, string $className, string $method, string $requestClass = null)
     {
         $this->routes[$route]['POST'] = [
             'class' => $className,
             'method' => $method,
+            'request' => $requestClass,
         ];
     }
 

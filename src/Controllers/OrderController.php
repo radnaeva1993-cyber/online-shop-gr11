@@ -4,6 +4,7 @@ namespace Controllers;
 
 use DTO\OrderCreateDTO;
 
+use Request\OrderRequest;
 use Service\OrderService;
 
 class OrderController extends BaseController
@@ -32,7 +33,7 @@ class OrderController extends BaseController
 
     }
 
-    public function handleCheckout(array $data)
+    public function handleCheckout(OrderRequest $request)
     {
 
         if ($this->authService->check()) {
@@ -40,15 +41,15 @@ class OrderController extends BaseController
             exit;
         }
 
-        $errors = $this->validate($data);
+        $errors = $request->validate();
         $user = $_SESSION['userId'];
 
         if (empty($errors)) {
 
-            $dto = new OrderCreateDTO($data['contact_name'],
-                $data['contact_phone'],
-                $data['comment'],  $user,
-                $data['address']);
+            $dto = new OrderCreateDTO($request->getContactName(),
+                $request->getContactPhone(),
+                $request->getComment(),  $user,
+                $request->getAddress());
 
             $this->orderService->createOrder($dto);
 
@@ -59,44 +60,6 @@ class OrderController extends BaseController
 
             require_once './../Views/order_form.php';
         }
-    }
-
-    private function validate($data)
-    {
-        $errors = [];
-
-        if (isset($data['contact_name'])) {
-            $name = $data['contact_name'];
-
-            if (empty($name)) {
-
-                $errors['contact_name'] = "Имя должно быть заполнено";
-            }
-        }
-
-        if (isset($data['contact_phone'])) {
-            $contactPhone = $data['contact_phone'];
-
-
-            if (!preg_match('/^[0-9]{11}$/', $contactPhone)) {
-                $errors['contact_phone'] = 'номер телефона должен содержать только цифры и быть длиной больше 10 символов';
-            }
-        }
-
-        if (isset($data['address'])) {
-            $address = $data['address'];
-
-            if (empty($address)) {
-                $errors['address'] = 'Адрес должен быть заполнен';
-            }
-
-            if (strlen($address) < 5) {
-                $errors['address'] = 'Слишком короткий адрес';
-            }
-
-        }
-
-        return $errors;
     }
 
     public function getAllOrders()

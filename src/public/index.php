@@ -48,34 +48,34 @@ $path = dirname(__DIR__);
 
 $app = new Core\App();
 $app->get('/registration', UserController::class , 'getRegistrate');
-$app->post('/registration', UserController::class ,'registrate');
+$app->post('/registration', UserController::class ,'registrate', \Request\ReviewRequest::class );
 
 $app->get('/login',  UserController::class , 'getLogin');
-$app->post('/login', UserController::class , 'login');
+$app->post('/login', UserController::class , 'login', \Request\LoginRequest::class );
 
 $app->get('/catalog', ProductController::class , 'catalog');
-$app->post('/increase-amount', ProductController::class,'increaseAmount');
-$app->post('/decrease-amount', ProductController::class,'decreaseAmount');
+$app->post('/increase-amount', ProductController::class,'increaseAmount', \Request\AddProductRequest::class );
+$app->post('/decrease-amount', ProductController::class,'decreaseAmount', \Request\AddProductRequest::class );
 
 $app->get('/profile',  UserController::class , 'profile');
 $app->post('/profile', UserController::class , 'getProfile');
 
 $app->get('/edit-profile', UserController::class , 'getEditProfile');
-$app->post('/edit-profile', UserController::class , 'editProfile');
+$app->post('/edit-profile', UserController::class , 'editProfile', \Request\EditProfileRequest::class );
 
 $app->get('/cart', CartController::class , 'cart');
 
 
 $app->get('/create-order',  OrderController::class , 'getCheckoutForm');
-$app->post('/create-order', OrderController::class , 'handleCheckout');
+$app->post('/create-order', OrderController::class , 'handleCheckout', \Request\OrderRequest::class );
 
 $app->get('/user-orders', OrderController::class , 'getAllOrders');
 
-$app->post('/increaseAmount', CartController::class, 'increaseAmount');
-$app->post('/decreaseAmount', CartController::class, 'decreaseAmount');
+$app->post('/increaseAmount', CartController::class, 'increaseAmount', \Request\AddProductRequest::class );
+$app->post('/decreaseAmount', CartController::class, 'decreaseAmount', \Request\AddProductRequest::class );
 
 $app->get('/reviews', ProductController::class , 'getReviews');
-$app->post('/reviews', ProductController::class , 'addReview');
+$app->post('/reviews', ProductController::class , 'addReview', \Request\ReviewRequest::class );
 
 
 $app->run();

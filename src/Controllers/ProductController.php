@@ -5,6 +5,8 @@ namespace Controllers;
 use Model\Product;
 use Model\Review;
 use Model\UserProducts;
+use Request\AddProductRequest;
+use Request\ReviewRequest;
 use Service\CartService;
 class ProductController extends BaseController
 {
@@ -45,7 +47,7 @@ class ProductController extends BaseController
         require_once '../Views/catalog.php';
     }
 
-    public function increaseAmount()
+    public function increaseAmount(AddProductRequest $request)
     {
         if ($this->authService->check()) {
             header("Location: /login");
@@ -53,7 +55,7 @@ class ProductController extends BaseController
         }
 
         $user = $this->authService->getCurrentUser();
-        $productId = (int)$_POST['product_id'];
+        $productId = $request->getProductId();
 
         $this->cartService->increaseAmount($productId, $user->getId());
 
@@ -61,7 +63,7 @@ class ProductController extends BaseController
         exit();
     }
 
-    public function decreaseAmount()
+    public function decreaseAmount(AddProductRequest $request)
     {
         if ($this->authService->check()) {
             header("Location: /login");
@@ -69,7 +71,7 @@ class ProductController extends BaseController
         }
 
         $user = $this->authService->getCurrentUser();
-        $productId = (int)$_POST['product_id'];
+        $productId = $request->getProductId();
 
         $this->cartService->decreaseAmount($productId, $user->getId());
         header("Location: /catalog");
@@ -98,15 +100,15 @@ class ProductController extends BaseController
         }
     }
 
-    public function addReview(): void
+    public function addReview(ReviewRequest $request): void
     {
         if ($this->authService->check()) {
             header("Location: /login");
             exit();
         }
 
-        $productId = $_POST['product_id'];
-        $comment = $_POST['comment'];
+        $productId = $request->getProductId();
+        $comment = $request->getComment();
         $user = $this->authService->getCurrentUser();
 
 

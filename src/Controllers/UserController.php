@@ -3,6 +3,8 @@
 namespace Controllers;
 
 use Model\User;
+use Request\EditProfileRequest;
+use Request\LoginRequest;
 use Request\RegistrateRequest;
 
 class UserController extends BaseController
@@ -48,19 +50,18 @@ class UserController extends BaseController
     }
 
 
-
     public function getLogin()
     {
         require_once '../Views/login_form.php';
     }
 
-    public function login()
+    public function login(LoginRequest $request)
     {
-        $errors = $this->loginValidate($_POST);
+        $errors = $request->validate();
 
         if (empty($errors)) {
 
-            $result = $this->authService->auth($_POST["email"], $_POST["password"]);
+            $result = $this->authService->auth($request->getEmail(), $request->getPassword());
 
             if ($result) {
                 header('Location: catalog');
@@ -72,23 +73,6 @@ class UserController extends BaseController
             }
             require_once '../Views/login_form.php';
         }
-    }
-
-    private function loginValidate($data)
-    {
-        $errors = [];
-
-        if (empty($data['email'])) {
-
-            $errors['email'] = "email должен быть заполнен";
-        }
-
-        if (empty($data['password'])) {
-
-            $errors['password'] = 'Пароль должен быть заполнен';
-        }
-        return $errors;
-
     }
 
     public function getProfile()
@@ -136,7 +120,7 @@ class UserController extends BaseController
         require_once '../Views/edit_profile_form.php';
     }
 
-    public function editProfile()
+    public function editProfile(EditProfileRequest $request)
     {
 
         if ($this->authService->check()) {
@@ -144,9 +128,9 @@ class UserController extends BaseController
             exit;
         }
 
-        $newName = $_POST['name'];
-        $newEmail = $_POST['email'];
-        $newPassword = $_POST['password'];
+        $newName = $request->getName();
+        $newEmail = $request->getEmail();
+        $newPassword = $request->getPassword();
 
         if ($newName === '' || $newEmail === '') {
             header('Location: /edit-profile');

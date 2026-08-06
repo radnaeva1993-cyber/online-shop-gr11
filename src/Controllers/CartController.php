@@ -48,7 +48,7 @@ class CartController extends BaseController
         require_once '../Views/cart.php';
     }
 
-    public function increaseAmount(AddProductRequest $request)
+    public function increaseAmount(AddProductRequest $request):int
     {
         if ($this->authService->check()) {
             header("Location: /login");
