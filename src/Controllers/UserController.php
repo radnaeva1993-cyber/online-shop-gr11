@@ -128,6 +128,8 @@ class UserController extends BaseController
             exit;
         }
 
+        $user = $this->authService->getCurrentUser();
+
         $newName = $request->getName();
         $newEmail = $request->getEmail();
         $newPassword = $request->getPassword();
@@ -137,15 +139,14 @@ class UserController extends BaseController
             exit;
         }
 
-//        $pdo = new PDO('pgsql:host=db;port=5432;dbname=mydb', 'dolgor', '12345678');
-
+        $hashedPassword = null;
         if ($newPassword !== '') {
             $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-            $this->userModel->updateNameEmailPasswordById($newName, $newEmail, $hashedPassword);
+            $this->userModel->updateNameEmailPasswordById($user->getId(), $newName, $newEmail, $hashedPassword);
 
         } else {
-            $this->userModel->updateNameEmailById($newName, $newEmail);
+            $this->userModel->updateNameEmailById($user->getId(),$newName, $newEmail);
         }
 
         header('Location: /profile');

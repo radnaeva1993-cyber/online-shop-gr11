@@ -48,7 +48,7 @@ $path = dirname(__DIR__);
 
 $app = new Core\App();
 $app->get('/registration', UserController::class , 'getRegistrate');
-$app->post('/registration', UserController::class ,'registrate', \Request\ReviewRequest::class );
+$app->post('/registration', UserController::class ,'registrate', \Request\RegistrateRequest::class );
 
 $app->get('/login',  UserController::class , 'getLogin');
 $app->post('/login', UserController::class , 'login', \Request\LoginRequest::class );

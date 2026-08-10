@@ -20,7 +20,7 @@ class CartController extends BaseController
         parent::__construct();
         $this->productModel = new Product();
         $this->userProductModel = new UserProducts();
-        $this->cartService = new CartService();
+        $this->cartService = new CartService($this->userProductModel , $this->productModel);
 
     }
 
@@ -44,6 +44,8 @@ class CartController extends BaseController
             $products[] = $product;
 
         }
+
+        $totalPrice = $this->cartService->getSum($user->getId());
 
         require_once '../Views/cart.php';
     }

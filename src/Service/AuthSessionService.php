@@ -3,8 +3,9 @@
 namespace Service;
 
 use Model\User;
+use Service\Auth\AuthInterface;
 
-class AuthService
+class AuthSessionService implements AuthInterface
 {
     protected User $userModel;
     public function __construct()
@@ -63,7 +64,7 @@ class AuthService
     }
 
 
-    private function startSession()
+    public function startSession()
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();

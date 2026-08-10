@@ -33,7 +33,7 @@ class User extends Model
         return $obj;
     }
 
-    public function updateNameEmailPasswordById($newName, $newEmail, $hashedPassword)
+    public function updateNameEmailPasswordById($userId,$newName, $newEmail, $hashedPassword)
     {
 
         $stmt = $this->PDO->prepare("UPDATE {$this->getTableName()} SET name = :name, email = :email, password = :password WHERE id = :id");
@@ -41,11 +41,11 @@ class User extends Model
             'name' => $newName,
             'email' => $newEmail,
             'password' => $hashedPassword,
-            'id' => $_SESSION['userId'],
+            'id' => $userId,
         ]);
     }
 
-    public function updateNameEmailById($newName, $newEmail)
+    public function updateNameEmailById($userId,$newName, $newEmail)
     {
 
         $stmt = $this->PDO->prepare("
@@ -56,14 +56,13 @@ class User extends Model
         $stmt->execute([
             'name' => $newName,
             'email' => $newEmail,
-            'id' => $_SESSION['userId'],
+            'id' => $userId,
         ]);
     }
 
     public function getNameEmailById($userId): self|null
     {
         $stmt = $this->PDO->prepare("SELECT name, email FROM {$this->getTableName()} WHERE id = :id");
-        $userId = $_SESSION['userId'];
         $stmt->execute(['id' => $userId]);
         $user = $stmt->fetch();
 
@@ -82,8 +81,8 @@ class User extends Model
 
     public function getById($userId):self|null
     {
-        $userId = $_SESSION['userId'];
-        $stmt = $this->PDO->query("SELECT * FROM {$this->getTableName()} WHERE id = " . $userId);
+        $stmt = $this->PDO->prepare("SELECT * FROM {$this->getTableName()} WHERE id = :id");
+        $stmt->execute(['id' => $userId]);
         $user = $stmt->fetch();
 
         if($user === false){

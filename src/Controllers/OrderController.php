@@ -16,7 +16,7 @@ class OrderController extends BaseController
     {
         parent::__construct();
 
-        $this->orderService = new OrderService();
+        $this->orderService = new OrderService($this->authService);
 
 
     }
@@ -42,14 +42,21 @@ class OrderController extends BaseController
         }
 
         $errors = $request->validate();
-        $user = $_SESSION['userId'];
+        $user = $this->authService->getCurrentUser();
+
+        if ($user === null){
+           header("Location: /login");
+           exit;
+        }
+
+        $userId = $user->getId();
 
         if (empty($errors)) {
 
             $dto = new OrderCreateDTO($request->getContactName(),
                 $request->getContactPhone(),
-                $request->getComment(),  $user,
-                $request->getAddress());
+                $request->getComment(),
+                $request->getAddress(), $user->getId());
 
             $this->orderService->createOrder($dto);
 

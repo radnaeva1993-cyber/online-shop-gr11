@@ -47,6 +47,17 @@
                 </div>
             <?php endforeach; ?>
         </div>
+        <!-- БЛОК ИТОГОВОЙ СУММЫ -->
+        <div class="row" style="margin-top: 30px;">
+            <div class="col-12 text-right">
+                <h4>
+                    Итоговая сумма:
+                    <span class="badge badge-success" style="font-size: 24px; padding: 10px;">
+                                <?php echo $totalPrice; ?> ₽
+                            </span>
+                </h4>
+            </div>
+        </div>
     </div>
 
 

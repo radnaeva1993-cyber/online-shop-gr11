@@ -22,7 +22,7 @@ class ProductController extends BaseController
         $this->productModel = new Product();
         $this->userProductModel = new UserProducts();
         $this->reviewModel = new Review();
-        $this->cartService = new CartService();
+        $this->cartService = new CartService($this->userProductModel , $this->productModel);
     }
 
     public function catalog()

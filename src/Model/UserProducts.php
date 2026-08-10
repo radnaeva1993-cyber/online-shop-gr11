@@ -34,7 +34,6 @@ class UserProducts extends Model
 
     public function insertUserProducts($userId, $productId, $amount)
     {
-        $userId = $_SESSION['userId'];
         $stmt = $this->PDO->prepare("INSERT INTO {$this->getTableName()} (user_id, product_id, amount) VALUES (:userId, :productId, :amount)");
         $stmt->execute(['userId' => $userId, 'productId' => $productId, 'amount' => $amount]);
     }

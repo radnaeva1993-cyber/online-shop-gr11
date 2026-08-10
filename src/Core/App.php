@@ -2,18 +2,13 @@
 
 namespace Core;
 
-use Request\AddProductRequest;
-use Request\EditProfileRequest;
-use Request\LoginRequest;
-use Request\OrderRequest;
-use Request\RegistrateRequest;
-use Request\ReviewRequest;
-use Service\CartService;
+use Service\LoggerService;
 
 class App
 {
 
     private array $routes = [];
+
 
     public function run()
     {
@@ -32,14 +27,22 @@ class App
                 $controller = new $class();
 
                 $requestClass = $handler['request'];
-                if( $requestClass !== null){
-                   $request =  new $requestClass($_POST);
-                   $controller->$method($request);
-                } else {
-                    $controller->$method();
+
+                try {
+                    if( $requestClass !== null){
+                        $request =  new $requestClass($_POST);
+                        $controller->$method($request);
+                    } else {
+                        $controller->$method();
+                    }
+                } catch (\Throwable $exception) {
+                    LoggerService::error($exception);
+
+                    require_once '../Views/404.php';
+
                 }
 
-                $controller->$method();
+
 
             } else {
                 echo "$requestMethod не поддерживается для $requestUri";
