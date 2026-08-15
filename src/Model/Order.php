@@ -48,6 +48,61 @@ public function getAllByUserId($userId)
 
 }
 
+    public function getOrderWithProductsByUserId($userId)
+    {
+        $sql = "SELECT o.id AS order_id,
+        o.contact_name,
+        o.contact_phone,
+        o.comment,
+        o.user_id,
+        o.address,
+        op.id AS order_product_id,
+        op.amount,
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        p.image_url,
+        (op.amount * p.price) AS total_sum
+        FROM orders o INNER JOIN order_products op ON o.id = op.order_id
+        INNER JOIN products p ON op.product_id = p.id
+        WHERE o.user_id = :userId
+        ORDER BY o.id DESC, op.id ASC";
+
+        $stmt = $this->PDO->prepare($sql);
+        $stmt->execute(['userId' => $userId]);
+        $rows = $stmt->fetchAll();
+
+        if (empty($rows)) {
+            return [];
+        }
+        $orders = [];
+        foreach ($rows as $row) {
+            $orderId = $row['order_id'];
+            if (!isset($orders[$orderId])) {
+                $order = new Order();
+                $order->id = $row['order_id'];
+                $order->contactName = $row['contact_name'];
+                $order->contactPhone = $row['contact_phone'];
+                $order->comment = $row['comment'];
+                $order->userId = $row['user_id'];
+                $order->address  = $row['address'];
+                $order->orderProducts = [];
+                $order->total = 0;
+
+                $orders[$orderId] = $order;
+            }
+            $orders[$orderId]->orderProducts[] =
+                ['product_id' => $row['product_id'],
+                    'name' => $row['product_name'],
+                    'price' => $row['price'],
+                    'amount' => $row['amount'],
+                    'total_sum' => $row['total_sum']];
+
+            $orders[$orderId]->total += $row['total_sum'];
+        }
+        return array_values($orders);
+    }
+
     public function getContactName(): string
     {
         return $this->contactName;

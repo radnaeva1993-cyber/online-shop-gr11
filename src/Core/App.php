@@ -15,6 +15,12 @@ class App
         $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
+        $requestUri = rtrim($requestUri, '/');
+        if(empty($requestUri))
+        {
+            $requestUri = '/';
+        }
+
         if (isset($this->routes[$requestUri])) {
             $routeMethods = $this->routes[$requestUri];
             if (isset($routeMethods[$requestMethod])) {
@@ -53,13 +59,6 @@ class App
         }
     }
 
-//    public function addRoute(string $route, string $routeMethod, string $className, string $method)
-//    {
-//        $this->routes[$route][$routeMethod] = [
-//            'class' => $className,
-//            'method' => $method,
-//            ];
-//    }
 
     public function get(string $route, string $className, string $method, string $requestClass = null)
     {

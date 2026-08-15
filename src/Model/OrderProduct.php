@@ -21,31 +21,33 @@ class OrderProduct extends Model
     {
         return 'order_products';
     }
-public function create(int $orderId, int $productId, int $amount)
-{
-    $stmt = $this->PDO->prepare("INSERT INTO {$this->getTableName()}(order_id, product_id,amount) VALUES (:orderId, :productId, :amount)");
-    $stmt->execute(['orderId' => $orderId, 'productId' => $productId, 'amount' => $amount]);
-}
 
-public function getAllByOrderId(int $orderId)
-{
-    $stmt = $this->PDO->prepare("SELECT * FROM {$this->getTableName()} WHERE order_id = :orderId");
-    $stmt->execute(['orderId' => $orderId]);
-    $orderProducts = $stmt->fetchAll();
-
-    $data = [];
-    foreach ($orderProducts as $orderProduct) {
-
-        $obj = new self;
-        $obj->id = $orderProduct['id'];
-        $obj->orderId = $orderProduct['order_id'];
-        $obj->productId = $orderProduct['product_id'];
-        $obj->amount = $orderProduct['amount'];
-        $data[] = $obj;
-
+    public function create(int $orderId, int $productId, int $amount)
+    {
+        $stmt = $this->PDO->prepare("INSERT INTO {$this->getTableName()}(order_id, product_id,amount) VALUES (:orderId, :productId, :amount)");
+        $stmt->execute(['orderId' => $orderId, 'productId' => $productId, 'amount' => $amount]);
     }
-    return $data;
-}
+
+    public function getAllByOrderId(int $orderId)
+    {
+        $stmt = $this->PDO->prepare("SELECT * FROM {$this->getTableName()} WHERE order_id = :orderId");
+        $stmt->execute(['orderId' => $orderId]);
+        $orderProducts = $stmt->fetchAll();
+
+        $data = [];
+        foreach ($orderProducts as $orderProduct) {
+
+            $obj = new self;
+            $obj->id = $orderProduct['id'];
+            $obj->orderId = $orderProduct['order_id'];
+            $obj->productId = $orderProduct['product_id'];
+            $obj->amount = $orderProduct['amount'];
+            $data[] = $obj;
+
+        }
+        return $data;
+    }
+
 
     public function getOrderId(): int
     {
@@ -69,6 +71,5 @@ public function getAllByOrderId(int $orderId)
     {
         return $this->id;
     }
-
 
 }
