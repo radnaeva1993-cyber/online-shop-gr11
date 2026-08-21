@@ -6,7 +6,6 @@ use DTO\OrderCreateDTO;
 use Model\Order;
 use Model\OrderProduct;
 use Model\UserProducts;
-use Service\Auth\AuthInterface;
 
 
 class OrderService
@@ -14,11 +13,14 @@ class OrderService
     private Order $orderModel;
     private OrderProduct $orderProductModel;
     private UserProducts $userProductModel;
-    private AuthInterface $authService;
 
-    public function __construct(AuthInterface $authService)
+    // БАГ: раньше сервису передавался AuthInterface, и createOrder() заново лез в него
+    // за текущим пользователем (лишний запрос к БД), хотя тот же самый userId уже
+    // приходил в OrderController от request'а. Причина, по которой authService вообще
+    // понадобился — DTO не хранил userId (см. DTO\OrderCreateDTO). Теперь DTO носит
+    // userId сам, поэтому зависимость от AuthInterface здесь больше не нужна.
+    public function __construct()
     {
-        $this->authService = $authService;
         $this->orderModel = new Order();
         $this->orderProductModel = new OrderProduct();
         $this->userProductModel = new UserProducts();
@@ -26,15 +28,15 @@ class OrderService
 
     public function createOrder(OrderCreateDTO $data)
     {
+        $userId = $data->getUserId();
 
-        $user = $this->authService->getCurrentUser();
         $orderId = $this->orderModel->create($data->getContactName(),
             $data->getContactPhone(),
             $data->getComment(),
-            $user->getId(),
+            $userId,
             $data->getAddress());//создаем сам заказ
 
-        $userProducts = $this->userProductModel->getAllByUserId($user->getId());
+        $userProducts = $this->userProductModel->getAllByUserId($userId);
         // получаем товары из корзины пользователя
 
 
@@ -46,7 +48,7 @@ class OrderService
             $this->orderProductModel->create($orderId, $productId, $amount);
         } //переносим товары в таблицу заказов
 
-        $this->userProductModel->deleteByUserId($user->getId()); // очищаем корзину пользователя
+        $this->userProductModel->deleteByUserId($userId); // очищаем корзину пользователя
 
     }
 

@@ -71,15 +71,23 @@ class UserController extends BaseController
                 $errors['email'] = 'Пользователь или пароль неверный';
 
             }
-            require_once '../Views/login_form.php';
         }
+
+        // БАГ: require_once вьюхи был внутри if (empty($errors)), поэтому если валидация
+        // (пустой email/пароль) сразу возвращала ошибки, метод завершался без единого
+        // echo/require — пользователь видел пустую белую страницу вместо формы с ошибками.
+        // Успешный логин по-прежнему завершается через header()+exit выше и сюда не доходит,
+        // так что вынести require_once за пределы if можно безопасно.
+        require_once '../Views/login_form.php';
     }
 
-    public function getProfile()
-    {
-        require_once '../Views/profile.php';
-    }
-
+    // БАГ: раньше было два метода. profile() (GET /profile) правильно проверял сессию
+    // и загружал $user. getProfile() был привязан к POST /profile, не проверял сессию
+    // вообще и не задавал $user — если бы этот роут когда-нибудь сработал, вьюха profile.php
+    // упала бы на $user->getName() (обращение к методу null). При этом форма на странице
+    // профиля не имеет action и submit-кнопки, так что POST /profile был мёртвым и битым
+    // кодом одновременно. Убрали лишний метод и роут (см. src/public/index.php),
+    // оставили один рабочий обработчик.
     public function profile()
     {
 
@@ -97,7 +105,14 @@ class UserController extends BaseController
 
     public function logout()
     {
-        parent::logout();
+        // БАГ: тут был вызов parent::logout(), а в BaseController такого метода нет —
+        // при обращении к /logout это привело бы к фатальной ошибке "Call to undefined
+        // method". К тому же роут /logout вообще не был зарегистрирован в index.php,
+        // поэтому разлогиниться через интерфейс было невозможно (ссылка "Выйти" вела
+        // на /login и ничего не делала). Теперь дёргаем logout() у самого authService —
+        // он реализован в AuthSessionService/AuthCookieService и объявлен в AuthInterface,
+        // роут /logout добавлен, а ссылка в catalog.php исправлена.
+        $this->authService->logout();
         header('Location: /login');
         exit;
     }

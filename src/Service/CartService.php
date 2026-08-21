@@ -11,13 +11,14 @@ class CartService
 
     private UserProducts $userProductModel;
     private Product $productModel;
-    private LoggerService $logger;
 
     public function __construct(UserProducts $userProductModel, Product $productModel)
     {
         $this->userProductModel = $userProductModel;
         $this->productModel = $productModel;
-        $this->logger = new LoggerService();
+        // LoggerService раньше создавался здесь только для того, чтобы залогировать
+        // исключение "меньше 1000 руб.", которое мы убрали из getSum() (см. ниже).
+        // Больше в этом сервисе логирование не нужно — убрали неиспользуемую зависимость.
     }
 
     public function increaseAmount(int $productId, int $userId)
@@ -57,13 +58,15 @@ class CartService
             }
         }
 
-        if ($totalPrice > 0 && $totalPrice < 1000) {
-            $exception = new \Exception( "Минимальная сумма заказа 1000 рублей. Сейчас у вас $totalPrice рублей." );
-            $this->logger->error($exception);
-            throw $exception;
-        }
-
+        // БАГ: раньше здесь проверялась минимальная сумма заказа (1000 руб.) и при её
+        // нарушении бросалось исключение. Но getSum() вызывается и из CartController::cart()
+        // просто чтобы ПОКАЗАТЬ корзину — из-за этого нельзя было даже открыть страницу
+        // корзины, если в ней лежало меньше 1000 руб. (App::run() ловит исключение и
+        // показывает 404). При этом на самом оформлении заказа (OrderService::createOrder)
+        // эта сумма вообще не проверялась, поэтому оформить заказ на 1 рубль было можно.
+        // Правило "минимум 1000 руб." — это бизнес-правило именно ОФОРМЛЕНИЯ заказа, а не
+        // просмотра корзины, поэтому его перенесли в OrderController::handleCheckout()
+        // (см. комментарий там). Здесь getSum() теперь просто считает сумму и ничего не решает.
         return $totalPrice;
-
     }
 }

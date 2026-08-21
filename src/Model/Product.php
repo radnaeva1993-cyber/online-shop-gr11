@@ -44,7 +44,14 @@ class Product extends Model
 
     public function getOneById($productId):self|null
     {
-        $stmt = $this->PDO->query("SELECT * FROM {$this->getTableName()} WHERE id = {$productId}");
+        // БАГ: $productId подставлялся прямо в SQL-строку через query() вместо
+        // параметризованного запроса. ProductController::getReviews() передавал сюда
+        // сырой $_GET['product_id'] без каста — это классическая SQL-инъекция
+        // (GET /reviews?product_id=1 OR 1=1 и т.п.). Переписали на prepare()/execute()
+        // с именованным параметром — так значение экранируется драйвером PDO, а не
+        // склеивается руками.
+        $stmt = $this->PDO->prepare("SELECT * FROM {$this->getTableName()} WHERE id = :id");
+        $stmt->execute(['id' => $productId]);
         $product = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if($product === false){

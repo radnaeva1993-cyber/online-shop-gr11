@@ -58,7 +58,13 @@ $app->post('/increase-amount', ProductController::class,'increaseAmount', \Reque
 $app->post('/decrease-amount', ProductController::class,'decreaseAmount', \Request\AddProductRequest::class );
 
 $app->get('/profile',  UserController::class , 'profile');
-$app->post('/profile', UserController::class , 'getProfile');
+// БАГ: тут был "$app->post('/profile', UserController::class , 'getProfile');" —
+// вёл на битый, никогда фактически не используемый метод (см. UserController::profile()).
+// Убрали вместе с самим методом.
+
+// БАГ: роута /logout не было вообще, поэтому вызвать UserController::logout() было
+// невозможно ни через какую ссылку в интерфейсе — сессия/кука никогда не уничтожались.
+$app->get('/logout', UserController::class , 'logout');
 
 $app->get('/edit-profile', UserController::class , 'getEditProfile');
 $app->post('/edit-profile', UserController::class , 'editProfile', \Request\EditProfileRequest::class );

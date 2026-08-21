@@ -1,6 +1,11 @@
 <form action="/create-order" method="POST">
     <div class="container">
         <h1>Order form</h1>
+        <?php if(isset($errors['cart'])): ?>
+        <!-- Ошибка "минимальная сумма заказа" теперь приходит сюда же, как обычная
+             ошибка валидации, а не роняет приложение в 404 (см. OrderController::handleCheckout). -->
+        <label style="color: crimson"><?php echo $errors['cart']; ?></label>
+        <?php endif; ?>
         <hr>
 
         <label for="name"><b>Name</b></label>

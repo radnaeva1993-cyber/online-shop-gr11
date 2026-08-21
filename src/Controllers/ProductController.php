@@ -85,19 +85,29 @@ class ProductController extends BaseController
             header("Location: /login");
             exit();
         }
-        $productId = $_GET['product_id'];
 
+        // БАГ 1: product_id из $_GET передавался в модель без каста к int — вместе со
+        // старой SQL-инъекцией в Product::getOneById() (уже исправлено там) это делало
+        // /reviews?product_id=... точкой атаки. Кастуем к int здесь тоже, для защиты
+        // "в глубину" — даже если модель когда-нибудь снова случайно склеит SQL руками.
+        $productId = (int) ($_GET['product_id'] ?? 0);
+
+        // БАГ 2: getOneById() вызывался дважды подряд с одним и тем же id — лишний
+        // запрос к БД без всякой цели, второй результат просто перезаписывал первый.
         $product = $this->productModel->getOneById($productId);
 
-        if ($productId) {
-            $user = $this->authService->getCurrentUser();
-            $product = $this->productModel->getOneById($productId);
-
-            if ($product) {
-                $reviews = $this->reviewModel->getAllByProductId($productId);
-            }
-            require_once "../Views/reviews_form.php";
+        // БАГ 3: если товар с таким id не найден, $product был null, но вьюха
+        // reviews_form.php всё равно рендерилась и сразу падала на
+        // $product->getImageUrl() (вызов метода на null). Теперь при отсутствии товара
+        // просто уходим в каталог вместо фатальной ошибки.
+        if ($product === null) {
+            header("Location: /catalog");
+            exit();
         }
+
+        $reviews = $this->reviewModel->getAllByProductId($productId);
+
+        require_once "../Views/reviews_form.php";
     }
 
     public function addReview(ReviewRequest $request): void

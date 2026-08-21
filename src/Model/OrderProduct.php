@@ -64,6 +64,15 @@ class OrderProduct extends Model
         return $this->amount;
     }
 
+    // БАГ: у $amount не было сеттера, поэтому Order::getOrderWithProductsByUserId()
+    // не мог заполнить это приватное свойство при сборке OrderProduct из JOIN-запроса
+    // и был вынужден собирать обычный array вместо объекта. Добавили сеттер, чтобы
+    // объект можно было полностью собрать снаружи класса.
+    public function setAmount(int $amount): void
+    {
+        $this->amount = $amount;
+    }
+
     /**
      * @return mixed
      */

@@ -91,12 +91,19 @@ public function getAllByUserId($userId)
 
                 $orders[$orderId] = $order;
             }
-            $orders[$orderId]->orderProducts[] =
-                ['product_id' => $row['product_id'],
-                    'name' => $row['product_name'],
-                    'price' => $row['price'],
-                    'amount' => $row['amount'],
-                    'total_sum' => $row['total_sum']];
+            // БАГ: раньше товар заказа собирался как обычный array (['name' => ..., 'price' => ...]),
+            // а вьюха src/Views/user_orders_form.php обращается к товару как к объекту
+            // ($orderProduct->name, $orderProduct->getAmount(), ...). Из-за этого страница
+            // "Мои заказы" падала с фатальной ошибкой "Call to a member function on array"
+            // при любом заказе. Исправили: собираем настоящий объект OrderProduct с теми же
+            // публичными полями/геттерами, которые уже ждала вьюха.
+            $orderProduct = new OrderProduct();
+            $orderProduct->name = $row['product_name'];
+            $orderProduct->price = (int) $row['price'];
+            $orderProduct->totalSum = (int) $row['total_sum'];
+            $orderProduct->setAmount((int) $row['amount']);
+
+            $orders[$orderId]->orderProducts[] = $orderProduct;
 
             $orders[$orderId]->total += $row['total_sum'];
         }

@@ -48,7 +48,13 @@ class UserProducts extends Model
     public function getAllProductsByUserId($userId):array|null
     {
 
-        $stmt = $this->PDO->query("SELECT * FROM {$this->getTableName()} WHERE user_id = {$userId}");
+        // БАГ: как и в Product::getOneById(), $userId склеивался прямо в SQL-строку через
+        // query(). Здесь $userId обычно приходит из сессии (id текущего пользователя), а
+        // не напрямую от клиента, поэтому риск ниже, но приём тот же самый и его легко
+        // случайно передать откуда-то ещё с пользовательским вводом. Переписали на
+        // prepare()/execute(), как в остальных методах этого класса.
+        $stmt = $this->PDO->prepare("SELECT * FROM {$this->getTableName()} WHERE user_id = :userId");
+        $stmt->execute(['userId' => $userId]);
         $userProducts = $stmt->fetchAll();
 
         if($userProducts === false){
