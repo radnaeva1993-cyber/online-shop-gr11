@@ -44,7 +44,8 @@ class Product extends Model
 
     public function getOneById($productId):self|null
     {
-        $stmt = $this->PDO->query("SELECT * FROM {$this->getTableName()} WHERE id = {$productId}");
+        $stmt = $this->PDO->prepare("SELECT * FROM {$this->getTableName()} WHERE id = :id");
+        $stmt->execute(['id' => $productId]);
         $product = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if($product === false){

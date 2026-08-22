@@ -6,7 +6,7 @@ use DTO\OrderCreateDTO;
 use Model\Order;
 use Model\OrderProduct;
 use Model\UserProducts;
-use Service\Auth\AuthInterface;
+
 
 
 class OrderService
@@ -14,11 +14,9 @@ class OrderService
     private Order $orderModel;
     private OrderProduct $orderProductModel;
     private UserProducts $userProductModel;
-    private AuthInterface $authService;
 
-    public function __construct(AuthInterface $authService)
+    public function __construct()
     {
-        $this->authService = $authService;
         $this->orderModel = new Order();
         $this->orderProductModel = new OrderProduct();
         $this->userProductModel = new UserProducts();
@@ -27,17 +25,16 @@ class OrderService
     public function createOrder(OrderCreateDTO $data)
     {
 
-        $user = $this->authService->getCurrentUser();
+        $userId = $data->getUserId();
+
         $orderId = $this->orderModel->create($data->getContactName(),
             $data->getContactPhone(),
             $data->getComment(),
-            $user->getId(),
+            $userId,
             $data->getAddress());//создаем сам заказ
 
-        $userProducts = $this->userProductModel->getAllByUserId($user->getId());
+        $userProducts = $this->userProductModel->getAllByUserId($userId);
         // получаем товары из корзины пользователя
-
-
 
         foreach ($userProducts as $userProduct) {
             $productId = $userProduct->getProductId();
@@ -46,7 +43,7 @@ class OrderService
             $this->orderProductModel->create($orderId, $productId, $amount);
         } //переносим товары в таблицу заказов
 
-        $this->userProductModel->deleteByUserId($user->getId()); // очищаем корзину пользователя
+        $this->userProductModel->deleteByUserId($userId); // очищаем корзину пользователя
 
     }
 

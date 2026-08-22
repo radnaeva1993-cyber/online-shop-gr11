@@ -36,6 +36,8 @@ class OrderRequest
 
                 $errors['contact_name'] = "Имя должно быть заполнено";
             }
+        } else {
+            $errors['contact_name'] = "Имя должно быть заполнено";
         }
 
         if (isset($this->data['contact_phone'])) {
@@ -45,6 +47,8 @@ class OrderRequest
             if (!preg_match('/^[0-9]{11}$/', $contactPhone)) {
                 $errors['contact_phone'] = 'номер телефона должен содержать только цифры и быть длиной больше 10 символов';
             }
+        } else {
+            $errors['contact_phone'] = 'номер телефона должен содержать только цифры и быть длиной больше 10 символов';
         }
 
         if (isset($this->data['address'])) {
@@ -58,10 +62,10 @@ class OrderRequest
                 $errors['address'] = 'Слишком короткий адрес';
             }
 
+        } else {
+            $errors['address'] = 'Адрес должен быть заполнен';
         }
 
         return $errors;
     }
-
-
 }

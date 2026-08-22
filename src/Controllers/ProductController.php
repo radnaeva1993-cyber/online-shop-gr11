@@ -85,20 +85,19 @@ class ProductController extends BaseController
             header("Location: /login");
             exit();
         }
-        $productId = $_GET['product_id'];
+        $productId = (int) ($_GET['product_id'] ?? 0);
 
         $product = $this->productModel->getOneById($productId);
 
-        if ($productId) {
-            $user = $this->authService->getCurrentUser();
-            $product = $this->productModel->getOneById($productId);
+        if ($product === null) {
+            header("Location: /catalog");
+            exit();
+        }
 
-            if ($product) {
-                $reviews = $this->reviewModel->getAllByProductId($productId);
-            }
+        $reviews = $this->reviewModel->getAllByProductId($productId);
+
             require_once "../Views/reviews_form.php";
         }
-    }
 
     public function addReview(ReviewRequest $request): void
     {

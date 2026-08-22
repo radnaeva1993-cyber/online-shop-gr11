@@ -322,7 +322,7 @@
 
 
             <?php if (isset($_SESSION['userId'])): ?>
-                <a href="/login">🚪 Выйти</a>
+                <a href="/logout">🚪 Выйти</a>
             <?php else: ?>
                 <a href="/login">🔐 Войти</a>
             <?php endif; ?>

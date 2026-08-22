@@ -1,6 +1,9 @@
 <form action="/create-order" method="POST">
     <div class="container">
         <h1>Order form</h1>
+        <?php if(isset($errors['cart'])): ?>
+            <label style="color: crimson"><?php echo $errors['cart']; ?></label>
+        <?php endif; ?>
         <hr>
 
         <label for="name"><b>Name</b></label>

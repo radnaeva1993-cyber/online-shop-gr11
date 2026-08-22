@@ -91,12 +91,15 @@ public function getAllByUserId($userId)
 
                 $orders[$orderId] = $order;
             }
-            $orders[$orderId]->orderProducts[] =
-                ['product_id' => $row['product_id'],
-                    'name' => $row['product_name'],
-                    'price' => $row['price'],
-                    'amount' => $row['amount'],
-                    'total_sum' => $row['total_sum']];
+
+            $orderProduct = new OrderProduct();
+
+            $orderProduct->name = $row['product_name'];
+            $orderProduct->price = (int) $row['price'];
+            $orderProduct->totalSum = (int) $row['total_sum'];
+            $orderProduct->setAmount((int) $row['amount']);
+
+            $orders[$orderId]->orderProducts[] = $orderProduct;
 
             $orders[$orderId]->total += $row['total_sum'];
         }

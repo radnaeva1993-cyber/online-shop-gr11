@@ -11,13 +11,11 @@ class CartService
 
     private UserProducts $userProductModel;
     private Product $productModel;
-    private LoggerService $logger;
 
     public function __construct(UserProducts $userProductModel, Product $productModel)
     {
         $this->userProductModel = $userProductModel;
         $this->productModel = $productModel;
-        $this->logger = new LoggerService();
     }
 
     public function increaseAmount(int $productId, int $userId)
@@ -55,12 +53,6 @@ class CartService
             if ($product !== null) {
                 $totalPrice += $product->getPrice() * $userProduct->getAmount();
             }
-        }
-
-        if ($totalPrice > 0 && $totalPrice < 1000) {
-            $exception = new \Exception( "Минимальная сумма заказа 1000 рублей. Сейчас у вас $totalPrice рублей." );
-            $this->logger->error($exception);
-            throw $exception;
         }
 
         return $totalPrice;

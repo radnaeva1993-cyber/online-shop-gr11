@@ -71,13 +71,8 @@ class UserController extends BaseController
                 $errors['email'] = 'Пользователь или пароль неверный';
 
             }
-            require_once '../Views/login_form.php';
         }
-    }
-
-    public function getProfile()
-    {
-        require_once '../Views/profile.php';
+         require_once '../Views/login_form.php';
     }
 
     public function profile()
@@ -97,7 +92,7 @@ class UserController extends BaseController
 
     public function logout()
     {
-        parent::logout();
+        $this->authService->logout();
         header('Location: /login');
         exit;
     }

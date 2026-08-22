@@ -64,6 +64,11 @@ class OrderProduct extends Model
         return $this->amount;
     }
 
+    public function setAmount(int $amount): void
+    {
+        $this->amount = $amount;
+    }
+
     /**
      * @return mixed
      */

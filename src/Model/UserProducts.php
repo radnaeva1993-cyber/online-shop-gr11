@@ -48,7 +48,8 @@ class UserProducts extends Model
     public function getAllProductsByUserId($userId):array|null
     {
 
-        $stmt = $this->PDO->query("SELECT * FROM {$this->getTableName()} WHERE user_id = {$userId}");
+        $stmt = $this->PDO->prepare("SELECT * FROM {$this->getTableName()} WHERE user_id = :userId");
+        $stmt->execute(['userId' => $userId]);
         $userProducts = $stmt->fetchAll();
 
         if($userProducts === false){

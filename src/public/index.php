@@ -58,7 +58,8 @@ $app->post('/increase-amount', ProductController::class,'increaseAmount', \Reque
 $app->post('/decrease-amount', ProductController::class,'decreaseAmount', \Request\AddProductRequest::class );
 
 $app->get('/profile',  UserController::class , 'profile');
-$app->post('/profile', UserController::class , 'getProfile');
+
+$app->get('/logout', UserController::class , 'logout');
 
 $app->get('/edit-profile', UserController::class , 'getEditProfile');
 $app->post('/edit-profile', UserController::class , 'editProfile', \Request\EditProfileRequest::class );

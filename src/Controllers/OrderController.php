@@ -6,18 +6,24 @@ use DTO\OrderCreateDTO;
 
 use Request\OrderRequest;
 use Service\OrderService;
+use Service\CartService;
+use Model\Product;
+use Model\UserProducts;
 
 class OrderController extends BaseController
 {
 
     private OrderService $orderService;
+    private CartService $cartService;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->orderService = new OrderService($this->authService);
-
+        $this->orderService = new OrderService();
+        $productModel = new Product();
+        $userProductModel = new UserProducts();
+        $this->cartService = new CartService($userProductModel, $productModel);
 
     }
 
@@ -50,6 +56,13 @@ class OrderController extends BaseController
         }
 
         $userId = $user->getId();
+
+        if  (empty($errors)) {
+        $totalPrice = $this->cartService->getSum($userId);
+            if ($totalPrice < 1000) {
+                $errors['cart'] = "Минимальная сумма заказа 1000 рублей. Сейчас у вас $totalPrice рублей.";
+            }
+        }
 
         if (empty($errors)) {
 
